@@ -3,13 +3,7 @@ from selenium import webdriver
 from threading import Thread
 from github import Github
 import constants
-
 import json
-
-# IMPORTANTE!!! --> Se lo script nopn funziona provare ad aggiornare adeguatamente la versione del chromedriver
-# Il percorso in cui sostituire il file .exe scaricato --> C:\Program Files (x86)
-
-# IMPORTANTE!!! --> Capire come rendere automatizzato l'aggiornamento del chromedriver in caso lo script venga messo su un server
 
 from article_class import Article
 
@@ -33,7 +27,7 @@ def get_news():
 
 def scrape(url):
 
-    PATH = "C:\Program Files (x86)/chromedriver.exe"  #IMPORTANTE!!! --> Capire se questo bisogna cambiarlo quando l'API verrá caricata su heroku
+    PATH = "C:\Program Files (x86)/chromedriver.exe"
     driver = webdriver.Chrome(PATH)
     driver.get(url)
 
@@ -43,7 +37,6 @@ def scrape(url):
     raw_articles = driver.find_elements_by_tag_name("article")
     images = driver.find_elements_by_tag_name("figure")
 
-    # IMPORTANTE!!! --> Ottimizzare questo codice (la parte in cui viene convertito e caricato il file JSON)
     articles = get_articles(raw_articles, images)
 
     driver.close()
@@ -55,7 +48,6 @@ def scrape(url):
 def get_articles(raw_articles, images):
     complete_articles = []
     index = 0
-    #length = len(raw_articles)
     while len(complete_articles) < 20:
         try:
             if raw_articles[index].text != "":
@@ -83,7 +75,6 @@ def load_articles(json_data):
     print(repo.name)
     contents = repo.get_contents("news.json")
     repo.update_file(contents.path, json_data, json_data, contents.sha)
-    #repo.create_file("news.json", "committing files", json_data)
 
 
 if __name__ == "__main__":
